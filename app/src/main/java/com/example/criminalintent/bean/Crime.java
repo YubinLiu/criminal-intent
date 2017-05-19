@@ -17,10 +17,16 @@ public class Crime {
 
     private Date mTime;
 
+    private String mSuspect;
+
     private boolean mIsSolved;
 
     public Crime() {
-        mId = UUID.randomUUID();
+        this(UUID.randomUUID());
+    }
+
+    public Crime(UUID Id) {
+        mId = Id;
         mDate = new Date();
         mTime = new Date();
     }
@@ -63,5 +69,17 @@ public class Crime {
 
     public void setSolved(boolean solved) {
         mIsSolved = solved;
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
+    }
+
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + ".jpg";
     }
 }

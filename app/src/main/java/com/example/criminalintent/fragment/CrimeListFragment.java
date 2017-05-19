@@ -36,8 +36,6 @@ public class CrimeListFragment extends Fragment {
 
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
 
-    private int mLastAdapterClickedPosition = -1;
-
     private RecyclerView mCrimeRecyclerView;
 
     private LinearLayout mEmptyCrimeListLayout;
@@ -161,7 +159,6 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            mLastAdapterClickedPosition = getAdapterPosition();
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivityForResult(intent, REQUEST_CRIME);
         }
@@ -193,16 +190,19 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
+
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
+        }
     }
 
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
 
-        if (crimes.size() > 0){
+        if (crimes.size() > 0) {
             mEmptyCrimeListLayout.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             mEmptyCrimeListLayout.setVisibility(View.VISIBLE);
             mNewCrime.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -216,11 +216,9 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            if (mLastAdapterClickedPosition < 0) {
-                mAdapter.notifyDataSetChanged();
-            } else {
-                mAdapter.notifyItemChanged(mLastAdapterClickedPosition);
-            }
+            mAdapter.setCrimes(crimes);
+            mAdapter.notifyDataSetChanged();
+
         }
 
         updateSubtitle();
